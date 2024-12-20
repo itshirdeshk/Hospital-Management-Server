@@ -1,7 +1,36 @@
 const mongoose = require("mongoose");
 
+
+const addressSchema = new mongoose.Schema({
+  line: {
+    type: [String],  // Array of strings for the address line(s)
+    required: true,  // You can make it required if necessary
+  },
+  city: {
+    type: String,
+    required: true,  // You can make it required if necessary
+  },
+  state: {
+    type: String,
+    required: true,  // You can make it required if necessary
+  },
+  postalCode: {
+    type: String,
+    required: true,  // You can make it required if necessary
+  },
+  country: {
+    type: String,
+    required: true,  // You can make it required if necessary
+  }
+}, { _id: false });
+
+
 const userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
     type: String,
     required: true,
   },
@@ -19,7 +48,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   address: {
-    type: String,
+    type: [addressSchema],
     required: true,
   },
   dob: {
@@ -42,6 +71,18 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+const userFHIRSchema = new mongoose.Schema({
+  UserId : {
+    type : String,
+  },
+  FHIR_id : {
+    type : String,
+  }
+})
+
+
+const User = mongoose.model("User", userSchema);
+const UserFHIR = mongoose.model("UserFHIR", userFHIRSchema);
+
+module.exports = {User , UserFHIR};
