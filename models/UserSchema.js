@@ -3,24 +3,24 @@ const mongoose = require("mongoose");
 
 const addressSchema = new mongoose.Schema({
   line: {
-    type: [String],  // Array of strings for the address line(s)
-    required: true,  // You can make it required if necessary
+    type: [String],  
+    required: true, 
   },
   city: {
     type: String,
-    required: true,  // You can make it required if necessary
+    required: true, 
   },
   state: {
     type: String,
-    required: true,  // You can make it required if necessary
+    required: true, 
   },
   postalCode: {
     type: String,
-    required: true,  // You can make it required if necessary
+    required: true, 
   },
   country: {
     type: String,
-    required: true,  // You can make it required if necessary
+    required: true, 
   }
 }, { _id: false });
 

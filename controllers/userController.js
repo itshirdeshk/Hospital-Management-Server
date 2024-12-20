@@ -5,7 +5,6 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const axios = require("axios");
-const { userInfo } = require("os");
 
 const bloodGroups = [
   "A+",
