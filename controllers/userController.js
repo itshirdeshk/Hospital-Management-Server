@@ -399,7 +399,7 @@ async function getNearbyHospitals(req, res, next) {
       latitude: hospital.lat,
       longitude: hospital.lon,
       address: `${hospital.tags['addr:street'] || ''}, ${hospital.tags['addr:city'] || ''}, ${hospital.tags['addr:postcode'] || ''}`.trim(),
-      phone: hospital.tags['contact:phone'] || "Not Available"
+      phone: hospital.tags['contact:phone'] || hospital.tags.phone || "Not Available"
     }));
 
     console.log(response.data);
@@ -407,7 +407,7 @@ async function getNearbyHospitals(req, res, next) {
     
     return res.status(200).json({
       success: "Fetched Successfully",
-      // data : response.data,
+      //data : response.data,
       hospitalData
     });
 
