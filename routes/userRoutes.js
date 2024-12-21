@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const { registerUser, loginUser, requestPasswordReset, resetPassword , UserMedicalInfo ,getUserMedicalInfo } = require('../controllers/userController');
+const { registerUser, loginUser, requestPasswordReset, resetPassword , UserMedicalInfo ,getUserMedicalInfo, getNearbyHospitals} = require('../controllers/userController');
 const { verifyToken } = require('../middlewares/verifyToken');
 
 
@@ -11,5 +11,6 @@ router.post('/reset-password' , requestPasswordReset);
 router.post('/reset-password/:token' , resetPassword);
 router.post('/medical-info' , verifyToken , UserMedicalInfo);
 router.get('/get-medical-info' , verifyToken , getUserMedicalInfo);
+router.post('/get-nearby-hospitals' , getNearbyHospitals);
 
 module.exports = router;

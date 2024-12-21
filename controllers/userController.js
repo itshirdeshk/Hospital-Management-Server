@@ -246,7 +246,7 @@ async function UserMedicalInfo(req, res, next) {
 
   const recordExists = await UserFHIR.findOne({ UserId: userId });
   if (recordExists) {
-    console.log(recordExists)
+    console.log(recordExists);
     return res.status(422).json({
       error: "Duplicate Entry not allowed",
     });
@@ -350,13 +350,13 @@ async function getUserMedicalInfo(req, res, next) {
 
     const fhirId = recordExists.FHIR_id;
     console.log(fhirId);
-    
+
     const response = await axios.get(
       `${process.env.FHIR_SERVER_URL}/Patient/${fhirId}`,
       {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
     console.log(response);
@@ -369,6 +369,56 @@ async function getUserMedicalInfo(req, res, next) {
   }
 }
 
+//POST -> /api/user/get-nearby-hospitals
+async function getNearbyHospitals(req, res, next) {
+  try {
+    const { latitude, longitude } = req.body;
+
+    if (!latitude || !longitude) {
+      return res.status(422).json({
+        error: "Location Needed",
+      });
+    }
+
+    const query = `[out:json];
+                  node["amenity"="hospital"](around:10000,${latitude},${longitude});
+                  out;`;
+
+    const url = process.env.NEARBY_HOSPITALS_URL;
+    
+    const response = await axios.post(url , query , {
+      headers : {
+        'Content-Type': 'text/plain'
+      }
+    });
+    
+    const hospitals = response.data.elements;
+
+    const hospitalData = hospitals.map(hospital => ({
+      name: hospital.tags.name || "No Name",
+      latitude: hospital.lat,
+      longitude: hospital.lon,
+      address: `${hospital.tags['addr:street'] || ''}, ${hospital.tags['addr:city'] || ''}, ${hospital.tags['addr:postcode'] || ''}`.trim(),
+      phone: hospital.tags['contact:phone'] || "Not Available"
+    }));
+
+    console.log(response.data);
+
+    
+    return res.status(200).json({
+      success: "Fetched Successfully",
+      // data : response.data,
+      hospitalData
+    });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      error: "Some Internal Server Error",
+    });
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
@@ -376,4 +426,5 @@ module.exports = {
   resetPassword,
   UserMedicalInfo,
   getUserMedicalInfo,
+  getNearbyHospitals,
 };
