@@ -381,7 +381,7 @@ async function getNearbyHospitals(req, res, next) {
     }
 
     const query = `[out:json];
-                  node["amenity"="hospital"](around:10000,${latitude},${longitude});
+                  node["amenity"="hospital"](around:5000,${latitude},${longitude});
                   out;`;
 
     const url = process.env.NEARBY_HOSPITALS_URL;
@@ -398,11 +398,11 @@ async function getNearbyHospitals(req, res, next) {
       name: hospital.tags.name || "No Name",
       latitude: hospital.lat,
       longitude: hospital.lon,
-      address: `${hospital.tags['addr:street'] || ''}, ${hospital.tags['addr:city'] || ''}, ${hospital.tags['addr:postcode'] || ''}`.trim(),
+      address : hospital.tags['addr:full'] ? hospital.tags['addr:full'] : `${hospital.tags['addr:street'] || ''}, ${hospital.tags['addr:city'] || ''}, ${hospital.tags['addr:postcode'] || ''}`.trim(),
       phone: hospital.tags['contact:phone'] || hospital.tags.phone || "Not Available"
     }));
 
-    console.log(response.data);
+    // console.log(response.data);
 
     
     return res.status(200).json({
